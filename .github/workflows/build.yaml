@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  Build Image:
+  build-push-image:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Build triggered by a ${{ github.event_name }} event."
