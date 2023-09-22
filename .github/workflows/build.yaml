@@ -24,6 +24,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         with:
           mask-password: 'true'
+          duration: 3600
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ secrets.login-ecr.outputs.registry }}
