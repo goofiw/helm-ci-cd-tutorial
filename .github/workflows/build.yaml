@@ -86,5 +86,7 @@ jobs:
       - name: Deploy with Helm
         run: |
           aws eks --region us-east-2 update-kubeconfig --name education-eks-demo 
-          helm upgrade --install --set image.repository=${{ secrets.ECR_REPOSITORY }} --set image.tag=${{ steps.tag-image.outputs.IMAGE_TAG }} demo ./demo 
+          echo ${{ steps.tag-image.outputs.IMAGE_TAG }}
+          echo ${{ steps.tag-image.outputs }}
+          helm upgrade --install --set image.repository=${{ secrets.ECR_REPOSITORY }} --set image.tag=${{ steps.tag-image.outputs.IMAGE_TAG }} stage-demo ./demo 
     
