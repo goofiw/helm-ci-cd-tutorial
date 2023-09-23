@@ -21,6 +21,7 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/gh-actions-ecr
           aws-region: us-east-2
       - name: Check if image exists
+        id: check-image-lock
         run: |
           RESULT=$(./.github/scripts/check-image.sh ${{ github.sha }})
           echo "SCRIPT RESULT $RESULT"
@@ -36,6 +37,7 @@ jobs:
           REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          echo ${{ steps.check-image-lock.SELECTED_COLOR }}
           echo $CHECK_IF_WORK
           docker build -t $REPOSITORY:$IMAGE_TAG .
           docker push $REPOSITORY:$IMAGE_TAG

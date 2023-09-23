@@ -58,6 +58,7 @@ if does_file_exist; then
 else
     # File doesn't exist, let's create one with 'building' status
     echo "building" | aws s3 cp - s3://$BUCKET_NAME/$IMAGE_TAG.txt
+    echo "Another Echo"
     echo "Started building the image."
 fi
 
