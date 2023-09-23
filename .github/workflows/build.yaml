@@ -53,7 +53,7 @@ jobs:
           chmod 700 get_helm.sh 
           ./get_helm.sh
           curl -LO https://dl.k8s.io/release/v1.27.5/bin/linux/amd64/kubectl
-      - name: Deploy
+      - name: Deploy with Helm
         run: |
           aws eks --region us-east-2 update-kubeconfig --name education-eks-demo 
           helm upgrade --install --set image.repository=${{ secrets.ECR_REGISTRY }} --set image.tag=${{ github.sha }} demo ./demo 
