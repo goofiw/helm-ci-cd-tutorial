@@ -57,6 +57,6 @@ jobs:
           aws eks --region us-east-2 update-kubeconfig --name education-eks-demo 
       - name: Deploy
         run: |
-          helm upgrade --install demo ./demo --set image.repository ${{ secrets.ECR_REGISTRY }} --set image.tag ${{ github.sha }}
-
+          helm upgrade --install --set image.repository ${{ secrets.ECR_REGISTRY }} --set image.tag ${{ github.sha }}
+ demo ./demo 
     
