@@ -51,6 +51,7 @@ jobs:
           echo "${{ steps.check-image-lock.outputs.BUILD_IMAGE }}"
           docker build -t $REPOSITORY:$IMAGE_TAG .
           docker push $REPOSITORY:$IMAGE_TAG
+          sleep 60
           ./.github/scripts/mark-image-as-built.sh ${{ github.sha }}
   deploy:
     runs-on: ubuntu-latest
