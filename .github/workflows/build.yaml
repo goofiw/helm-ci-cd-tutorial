@@ -38,19 +38,21 @@ jobs:
           fi
           echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
       - name: Login to Amazon ECR
-        if: ${{ steps.check-image-lock.BUILD_IMAGE }} == "true"
+        if: ${{ steps.check-image-lock.outputs.BUILD_IMAGE }} == "true"
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
         with:
           mask-password: 'true'
       - name: Build, tag, and push docker image to Amazon ECR
-        if: ${{ steps.check-image-lock.BUILD_IMAGE }} == "true"
+        if: ${{ steps.check-image-lock.outputs.BUILD_IMAGE }} == "true"
         env:
           REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo ${{ steps.check-image-lock.SELECTED_COLOR }}
-          echo $CHECK_IF_WORK
+          echo "${{ steps.check-image-lock.outputs.SELECTED_COLOR }}"
+          echo ${{ steps.check-image-lock.outputs.SELECTED_COLOR }}
+          echo "${{ steps.check-image-lock.outputs.BUILD_IMAGE }}"
+          echo "wtf"
           docker build -t $REPOSITORY:$IMAGE_TAG .
           docker push $REPOSITORY:$IMAGE_TAG
           echo "built" | aws s3 cp - s3://ci-image-lock-demo/${{ github.sha }}.txt
