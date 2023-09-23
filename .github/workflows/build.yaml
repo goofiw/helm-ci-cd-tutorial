@@ -37,13 +37,13 @@ jobs:
             exit 2;
           fi
       - name: Login to Amazon ECR
-        if: ${{ steps.check-image-lock.outputs.BUILD_IMAGE == "true" }}
+        if: ${{ steps.check-image-lock.outputs.BUILD_IMAGE == 'true' }}
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
         with:
           mask-password: 'true'
       - name: Build, tag, and push docker image to Amazon ECR
-        if: ${{ steps.check-image-lock.outputs.BUILD_IMAGE == "true" }} 
+        if: ${{ steps.check-image-lock.outputs.BUILD_IMAGE == 'true' }} 
         env:
           REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
