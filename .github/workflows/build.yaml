@@ -52,12 +52,11 @@ jobs:
           curl -LO https://dl.k8s.io/release/v1.27.5/bin/linux/amd64/kubectl
       - name: EKS Access
         run: |
-          aws eks --region $(terraform output -raw region) update-kubeconfig \
-    --name education-eks-demo 
+          aws eks --region us-east-2 update-kubeconfig --name education-eks-demo 
       - name: Deploy
         run: |
           helm upgrade --install demo ./demo \
             --set image.repository ${{ secrets.ECR_REGISTRY }} \
-            --set image.tag ${{ github.sha }}
+            --set image.tag ${{ ${{ github.sha }}
 
     
