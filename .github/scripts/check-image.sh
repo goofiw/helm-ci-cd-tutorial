@@ -34,22 +34,26 @@ if does_file_exist; then
 
             if [[ $elapsed_time -ge $TIMEOUT ]]; then
                 echo "Error: Build timeout reached."
+                echo "STATUS:ERROR"
                 exit 2
             fi
 
             if ! does_file_exist; then
                 echo "Error: File disappeared during build process."
+                echo "STATUS:ERROR"
                 exit 2
             fi
 
             CONTENT=$(aws s3 cp s3://$BUCKET_NAME/$IMAGE_TAG.txt -)
             if [[ "$CONTENT" == "built" ]]; then
                 echo "Image has been built!"
+                echo "STATUS:IMAGE_EXISTS"
                 exit 0
             fi
         done
     elif [[ "$CONTENT" == "built" ]]; then
         echo "Image has been built!"
+        echo "STATUS:IMAGE_EXISTS"
         exit 0
     else
         echo "Unknown content in the file. Exiting."
@@ -60,6 +64,7 @@ else
     echo "building" | aws s3 cp - s3://$BUCKET_NAME/$IMAGE_TAG.txt
     echo "Another Echo"
     echo "Started building the image."
+    echo "STATUS:IMAGE_LOCK_NOT_FOUND"
 fi
 
 # At this point, you can add your docker build logic

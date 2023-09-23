@@ -25,11 +25,11 @@ jobs:
         run: |
           output=$(./.github/scripts/check-image.sh ${{ github.sha }})
           if echo "$output" | grep -q "STATUS:IMAGE_EXISTS"; then
-            echo "IMAGE_EXISTS=true" >> $GITHUB_OUTPUT
+            echo "Image exists"
           elif echo "$output" | grep -q "STATUS:ERROR"; then
             echo "Image timeout or build image error.  Exiting"
             exit 1;
-          elif echo "$output" | grep -q "STATUS:NO_IMAGE"; then
+          elif echo "$output" | grep -q "STATUS:IMAGE_LOCK_NOT_FOUND"; then
             echo "No image found, proceed with building"
             echo "BUILD_IMAGE=true" >> $GITHUB_OUTPUT
           else
