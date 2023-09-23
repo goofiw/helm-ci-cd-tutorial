@@ -23,16 +23,28 @@ jobs:
       - name: Check if image exists
         id: check-image-lock
         run: |
-          RESULT=$(./.github/scripts/check-image.sh ${{ github.sha }})
-          echo "SCRIPT RESULT $RESULT"
-          CHECK_IF_WORK="YES IT WORKS"
+          output=$(./.github/scripts/check-image.sh ${{ github.sha }})
+          if echo "$output" | grep -q "STATUS:IMAGE_EXISTS"; then
+            echo "IMAGE_EXISTS=true" >> $GITHUB_OUTPUT
+          elif echo "$output" | grep -q "STATUS:ERROR"; then
+            echo "Image timeout or build image error.  Exiting"
+            exit 1;
+          elif echo "$output" | grep -q "STATUS:NO_IMAGE"; then
+            echo "No image found, proceed with building"
+            echo "BUILD_IMAGE=true" >> $GITHUB_OUTPUT
+          else
+            echo "Unknown check image script result"
+            exit 2;
+          fi
           echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
       - name: Login to Amazon ECR
+        if: ${{ steps.check-image-lock.BUILD_IMAGE }} == "true"
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
         with:
           mask-password: 'true'
       - name: Build, tag, and push docker image to Amazon ECR
+        if: ${{ steps.check-image-lock.BUILD_IMAGE }} == "true"
         env:
           REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
