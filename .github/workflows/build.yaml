@@ -75,10 +75,11 @@ jobs:
           ./get_helm.sh
           curl -LO https://dl.k8s.io/release/v1.27.5/bin/linux/amd64/kubectl
       - name: Add Image Tag
+        id: tag-image
         run: |
           MANIFEST=$(aws ecr batch-get-image --repository-name cicd_tutorial --image-ids imageTag=${{ github.sha }} --output text --query images[].imageManifest)
           echo "$MANIFEST"
-          IMAGE_TAG=test-${{ github.shortSha }}-$(date +%s)
+          IMAGE_TAG=stage-${{ github.shortSha }}-$(date +%s)
           echo "$IMAGE_TAG"
           aws ecr put-image --repository-name cicd_tutorial --image-tag $IMAGE_TAG --image-manifest "$MANIFEST"
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
