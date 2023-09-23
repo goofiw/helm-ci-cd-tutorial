@@ -26,11 +26,11 @@ jobs:
           mask-password: 'true'
       - name: Build, tag, and push docker image to Amazon ECR
         env:
-          REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY:$IMAGE_TAG .
-          docker push $REGISTRY:$IMAGE_TAG
+          docker build -t $REPOSITORY:$IMAGE_TAG .
+          docker push $REPOSITORY:$IMAGE_TAG
   deploy:
     runs-on: ubuntu-latest
     needs: ['build-push-image']
@@ -55,5 +55,5 @@ jobs:
       - name: Deploy with Helm
         run: |
           aws eks --region us-east-2 update-kubeconfig --name education-eks-demo 
-          helm upgrade --install --set image.repository=${{ secrets.ECR_REGISTRY }} --set image.tag=${{ github.sha }} demo ./demo 
+          helm upgrade --install --set image.repository=${{ secrets.ECR_REPOSITORY }} --set image.tag=${{ github.sha }} demo ./demo 
     
