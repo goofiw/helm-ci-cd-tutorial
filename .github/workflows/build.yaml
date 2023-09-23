@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build-push-image:
@@ -21,8 +22,8 @@ jobs:
           aws-region: us-east-2
       - name: Check if image exists
         run: |
-          aws s3 ls ci-image-lock-demo
-          exit 1
+          ./.github/scripts/check-image.sh ${{ github.sha }}
+          CHECK_IF_WORK="YES IT WORKS"
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -33,6 +34,7 @@ jobs:
           REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          echo $CHECK_IF_WORK
           docker build -t $REPOSITORY:$IMAGE_TAG .
           docker push $REPOSITORY:$IMAGE_TAG
   deploy:
