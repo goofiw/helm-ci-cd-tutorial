@@ -48,7 +48,9 @@ jobs:
           aws-region: us-east-2
       - name: Install Dependencies
         run: |
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh chmod 700 get_helm.sh ./get_helm.sh
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh 
+          chmod 700 get_helm.sh 
+          ./get_helm.sh
           curl -LO https://dl.k8s.io/release/v1.27.5/bin/linux/amd64/kubectl
       - name: EKS Access
         run: |
