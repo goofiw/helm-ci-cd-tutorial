@@ -92,7 +92,7 @@ jobs:
           helm upgrade --install --set image.repository=${{ secrets.ECR_REPOSITORY }} --set image.tag=${{ steps.tag-image.outputs.IMAGE_TAG }} stage-demo ./demo 
     
   deploy-test:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event_name !== 'push' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event_name != 'push' }}
     runs-on: ubuntu-latest
     needs: ['build-push-image']
     env:
