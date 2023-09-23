@@ -4,6 +4,7 @@
 BUCKET_NAME="ci-image-lock-demo"
 IMAGE_TAG=$1
 SLEEP_INTERVAL=10  # Interval in seconds to check the S3 file status
+TIMEOUT=300
 
 # Check if image tag is provided
 if [[ -z "$IMAGE_TAG" ]]; then
@@ -29,6 +30,12 @@ if does_file_exist; then
         while true; do
             sleep $SLEEP_INTERVAL
             echo "Waiting for image build to complete"
+            elapsed_time=$((elapsed_time + SLEEP_INTERVAL))
+
+            if [[ $elapsed_time -ge $TIMEOUT ]]; then
+                echo "Error: Build timeout reached."
+                exit 2
+            fi
 
             if ! does_file_exist; then
                 echo "Error: File disappeared during build process."
