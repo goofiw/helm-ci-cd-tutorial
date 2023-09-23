@@ -56,6 +56,5 @@ jobs:
       - name: Deploy
         run: |
           aws eks --region us-east-2 update-kubeconfig --name education-eks-demo 
-          kubectl get nodes
           helm upgrade --install --set image.repository=${{ secrets.ECR_REGISTRY }} --set image.tag=${{ github.sha }} demo ./demo 
     
