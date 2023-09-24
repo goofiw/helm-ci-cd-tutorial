@@ -31,49 +31,35 @@ does_image_exist() {
     return 1
   fi
 }
+  
 
+# Check if the file for the image tag exists
 if does_image_exist; then
   echo "Image already exists in repository"
   echo "STATUS:IMAGE_EXISTS"
   exit 0;
-fi
-  
-
-# Check if the file for the image tag exists
-if does_lock_file_exist; then
+elif does_lock_file_exist; then
     # File exists, let's check its content
-    CONTENT=$(aws s3 cp s3://$BUCKET_NAME/$IMAGE_TAG.txt -)
-    echo "Lockfile content $CONTENT"
-
-    if [[ "$CONTENT" == "building" ]]; then
-        echo "Image is already being built! Waiting for completion..."
+    echo "Image is already being built! Waiting for completion..."
 
         # Loop until file is updated to 'built' or disappears
-        while true; do
-            sleep $SLEEP_INTERVAL
-            echo "Waiting for image build to complete"
-            elapsed_time=$((elapsed_time + SLEEP_INTERVAL))
+    while true; do
+        sleep $SLEEP_INTERVAL
+        echo "Waiting for image build to complete"
+        elapsed_time=$((elapsed_time + SLEEP_INTERVAL))
 
-            if [[ $elapsed_time -ge $TIMEOUT ]]; then
-                echo "Error: Build timeout reached."
-                echo "STATUS:ERROR"
-                exit 0
-            fi
+        if [[ $elapsed_time -ge $TIMEOUT ]]; then
+            echo "Error: Build timeout reached."
+            echo "STATUS:ERROR"
+            exit 0
+        fi
 
-            if does_image_exist; then
-                echo "Image has been built!"
-                echo "STATUS:IMAGE_EXISTS"
-                exit 0
-            fi
-        done
-    elif does_image_exist; then
-        echo "Image has been built!"
-        echo "STATUS:IMAGE_EXISTS"
-        exit 0
-    else
-        echo "Unknown content in the file. Exiting."
-        exit 0
-    fi
+        if does_image_exist; then
+            echo "Image has been built!"
+            echo "STATUS:IMAGE_EXISTS"
+            exit 0
+        fi
+    done
 else
     # File doesn't exist, let's create one with 'building' status
     echo "building" | aws s3 cp - s3://$BUCKET_NAME/$IMAGE_TAG.txt
