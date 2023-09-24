@@ -55,6 +55,9 @@ jobs:
           docker build -t $REPOSITORY:$IMAGE_TAG .
           docker push $REPOSITORY:$IMAGE_TAG
           ./.github/scripts/mark-image-as-built.sh ${{ github.sha }}
+      - name: Failure
+        if: ${{ failure() }} 
+        run: ./.github/scripts/remove-image-lock-file.sh ${{ github.sha }}
   deploy-stage:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
