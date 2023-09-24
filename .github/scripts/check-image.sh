@@ -20,8 +20,12 @@ does_lock_file_exist() {
 }
 
 does_image_exist() {
-    aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=$IMAGE_TAG --region $AWS_REGION &> /dev/null
-    return $?
+  echo "Does image exist args"
+  echo $REPOSITORY_NAME
+  echo $IMAGE_TAG
+  echo $AWS_REGION
+  aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=$IMAGE_TAG --region $AWS_REGION &> /dev/null
+  return $?
 }
 
 

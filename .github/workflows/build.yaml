@@ -37,7 +37,7 @@ jobs:
             echo "No image found, proceed with building"
             echo "BUILD_IMAGE=true" >> $GITHUB_OUTPUT
           else
-            echo "Unknown check image script result"
+            echo "Unknown check image script result $output"
             exit 2;
           fi
       - name: Login to Amazon ECR
