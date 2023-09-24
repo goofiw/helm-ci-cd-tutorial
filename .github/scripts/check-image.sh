@@ -64,7 +64,7 @@ if does_lock_file_exist; then
         exit 0
     else
         echo "Unknown content in the file. Exiting."
-        exit 3
+        exit 0
     fi
 else
     # File doesn't exist, let's create one with 'building' status
