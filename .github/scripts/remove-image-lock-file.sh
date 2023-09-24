@@ -16,5 +16,5 @@ if [[ $? -eq 0 ]]; then
 else
     echo "Image with tag $IMAGE_TAG does not exist in repository $REPOSITORY_NAME."
     echo "Removing lockfile $IMAGE_TAG do to build job failure"
-    echo "built" | aws s3api delete-object --bucket $LOCK_BUCKET --key $IMAGE_TAG.txt
+    aws s3api delete-object --bucket $LOCK_BUCKET --key $IMAGE_TAG.txt
 fi

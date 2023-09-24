@@ -5,6 +5,7 @@ BUCKET_NAME="ci-image-lock-demo"
 IMAGE_TAG=$1
 SLEEP_INTERVAL=10  # Interval in seconds to check the S3 file status
 TIMEOUT=300
+REPOSITORY_NAME=cicd-tutorial
 
 # Check if image tag is provided
 if [[ -z "$IMAGE_TAG" ]]; then
@@ -13,13 +14,26 @@ if [[ -z "$IMAGE_TAG" ]]; then
 fi
 
 # Function to check if the file exists in S3
-does_file_exist() {
+does_lock_file_exist() {
     aws s3 ls s3://$BUCKET_NAME/$IMAGE_TAG.txt > /dev/null 2>&1
     return $?
 }
 
+does_image_exist() {
+    aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=$IMAGE_TAG --region $AWS_REGION &> /dev/null
+    return $?
+}
+
+
+if does_image_exist; then
+  echo "Image already exists in repository"
+  echo "STATUS:IMAGE_EXISTS"
+  exit 0;
+fi
+  
+
 # Check if the file for the image tag exists
-if does_file_exist; then
+if does_lock_file_exist; then
     # File exists, let's check its content
     CONTENT=$(aws s3 cp s3://$BUCKET_NAME/$IMAGE_TAG.txt -)
 
@@ -38,20 +52,13 @@ if does_file_exist; then
                 exit 2
             fi
 
-            if ! does_file_exist; then
-                echo "Error: File disappeared during build process."
-                echo "STATUS:ERROR"
-                exit 2
-            fi
-
-            CONTENT=$(aws s3 cp s3://$BUCKET_NAME/$IMAGE_TAG.txt -)
-            if [[ "$CONTENT" == "built" ]]; then
+            if does_image_exist; then
                 echo "Image has been built!"
                 echo "STATUS:IMAGE_EXISTS"
                 exit 0
             fi
         done
-    elif [[ "$CONTENT" == "built" ]]; then
+    elif does_image_exist; then
         echo "Image has been built!"
         echo "STATUS:IMAGE_EXISTS"
         exit 0
