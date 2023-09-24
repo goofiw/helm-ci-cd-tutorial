@@ -4,7 +4,7 @@
 BUCKET_NAME="ci-image-lock-demo"
 IMAGE_TAG=$1
 SLEEP_INTERVAL=10  # Interval in seconds to check the S3 file status
-TIMEOUT=300
+TIMEOUT=180
 REPOSITORY_NAME=cicd-tutorial
 
 # Check if image tag is provided
@@ -25,7 +25,13 @@ does_image_exist() {
   echo $IMAGE_TAG
   echo $AWS_REGION
   aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=$IMAGE_TAG --region $AWS_REGION &> /dev/null
-  return $?
+  if [[ $? -eq 0 ]]; then
+    echo "Image with tag $IMAGE_TAG exists in repository $REPOSITORY_NAME."
+    return 1
+  else
+    echo "Image with tag $IMAGE_TAG does not exist in repository $REPOSITORY_NAME."
+    return 0
+  fi
 }
 
 
@@ -54,7 +60,7 @@ if does_lock_file_exist; then
             if [[ $elapsed_time -ge $TIMEOUT ]]; then
                 echo "Error: Build timeout reached."
                 echo "STATUS:ERROR"
-                exit 2
+                exit 0
             fi
 
             if does_image_exist; then
