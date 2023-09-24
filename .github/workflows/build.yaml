@@ -39,6 +39,7 @@ jobs:
             echo "Unknown check image script result"
             exit 2;
           fi
+          exit 3;
       - name: Login to Amazon ECR
         if: ${{ steps.check-image-lock.outputs.BUILD_IMAGE == 'true' }}
         id: login-ecr
@@ -57,7 +58,9 @@ jobs:
           ./.github/scripts/mark-image-as-built.sh ${{ github.sha }}
       - name: Failure
         if: ${{ failure() }} 
-        run: ./.github/scripts/remove-image-lock-file.sh ${{ github.sha }}
+        run: |
+          echo "Removing lockfile ${{ github.sha }} do to build job failure"
+          ./.github/scripts/remove-image-lock-file.sh ${{ github.sha }}
   deploy-stage:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
