@@ -26,6 +26,7 @@ jobs:
         id: check-image-lock
         run: |
           output=$(./.github/scripts/check-image.sh ${{ github.sha }})
+          echo "Check image content"
           echo $output
           if echo "$output" | grep -q "STATUS:IMAGE_EXISTS"; then
             echo "Image exists"

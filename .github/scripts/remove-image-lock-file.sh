@@ -12,7 +12,7 @@ aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=
 # Check the exit status
 if [[ $? -eq 0 ]]; then
     echo "Image with tag $IMAGE_TAG exists in repository $REPOSITORY_NAME."
-    ./mark-image-as-built $IMAGE_TAG $LOCK_BUCKET
+    .github/scripts/mark-image-as-built $IMAGE_TAG $LOCK_BUCKET
 else
     echo "Image with tag $IMAGE_TAG does not exist in repository $REPOSITORY_NAME."
     echo "Removing lockfile $IMAGE_TAG do to build job failure"

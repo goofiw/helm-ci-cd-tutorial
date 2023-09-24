@@ -36,6 +36,7 @@ fi
 if does_lock_file_exist; then
     # File exists, let's check its content
     CONTENT=$(aws s3 cp s3://$BUCKET_NAME/$IMAGE_TAG.txt -)
+    echo "Lockfile content $CONTENT"
 
     if [[ "$CONTENT" == "building" ]]; then
         echo "Image is already being built! Waiting for completion..."
