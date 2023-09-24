@@ -17,4 +17,4 @@ else
     echo "Removing lockfile $IMAGE_TAG due to failure as image does not exist in repository"
     aws s3api delete-object --bucket $LOCK_BUCKET --key $IMAGE_TAG.txt
 fi
-./.github/scripts/remove-build-lock-file $IMAGE_TAG $LOCK_BUCKET
+./.github/scripts/remove-build-lock-file.sh $IMAGE_TAG $LOCK_BUCKET

@@ -55,7 +55,7 @@ jobs:
           echo "${{ steps.check-image-lock.outputs.BUILD_IMAGE }}"
           docker build -t $REPOSITORY:$IMAGE_TAG .
           docker push $REPOSITORY:$IMAGE_TAG
-          ./.github/scripts/remove-build-lock-file ${{ github.sha }} ci-image-lock-demo
+          ./.github/scripts/remove-build-lock-file.sh ${{ github.sha }} ci-image-lock-demo
       - name: Build Failure Step
         if: ${{ failure() }} 
         run: |
