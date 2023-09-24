@@ -26,12 +26,11 @@ does_image_exist() {
   echo $AWS_REGION
   aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=$IMAGE_TAG --region $AWS_REGION &> /dev/null
   if [[ $? -eq 0 ]]; then
-    return 1
-  else
     return 0
+  else
+    return 1
   fi
 }
-
 
 if does_image_exist; then
   echo "Image already exists in repository"
