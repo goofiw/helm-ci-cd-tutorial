@@ -55,11 +55,11 @@ jobs:
           echo "${{ steps.check-image-lock.outputs.BUILD_IMAGE }}"
           docker build -t $REPOSITORY:$IMAGE_TAG .
           docker push $REPOSITORY:$IMAGE_TAG
-          ./.github/scripts/mark-image-as-built.sh ${{ github.sha }} ci-image-lock-demo
+          ./.github/scripts/remove-build-lock-file ${{ github.sha }} ci-image-lock-demo
       - name: Build Failure Step
         if: ${{ failure() }} 
         run: |
-          ./.github/scripts/remove-image-lock-file.sh ${{ github.sha }} cicd_tutorial ci-image-lock-demo us-east-2
+          ./.github/scripts/handle-build-image-failure.sh ${{ github.sha }} cicd_tutorial ci-image-lock-demo us-east-2
   deploy-stage:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest

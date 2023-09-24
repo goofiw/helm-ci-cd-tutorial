@@ -82,8 +82,3 @@ else
     echo "STATUS:IMAGE_LOCK_NOT_FOUND"
 fi
 
-# At this point, you can add your docker build logic
-# ...
-
-# After building the docker image, update the file to 'built'
-# echo "built" | aws s3 cp - s3://$BUCKET_NAME/$IMAGE_TAG.txt

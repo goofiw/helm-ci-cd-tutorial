@@ -12,9 +12,9 @@ aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=
 # Check the exit status
 if [[ $? -eq 0 ]]; then
     echo "Image with tag $IMAGE_TAG exists in repository $REPOSITORY_NAME."
-    ./.github/scripts/mark-image-as-built $IMAGE_TAG $LOCK_BUCKET
 else
     echo "Image with tag $IMAGE_TAG does not exist in repository $REPOSITORY_NAME."
     echo "Removing lockfile $IMAGE_TAG due to failure as image does not exist in repository"
     aws s3api delete-object --bucket $LOCK_BUCKET --key $IMAGE_TAG.txt
 fi
+./.github/scripts/remove-build-lock-file $IMAGE_TAG $LOCK_BUCKET
