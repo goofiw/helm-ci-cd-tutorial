@@ -24,7 +24,8 @@ does_image_exist() {
   echo $REPOSITORY_NAME
   echo $IMAGE_TAG
   echo $AWS_REGION
-  aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=$IMAGE_TAG --region $AWS_REGION &> /dev/null
+  # aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=$IMAGE_TAG --region $AWS_REGION &> /dev/null
+  aws ecr describe-images --repository-name $REPOSITORY_NAME --image-ids imageTag=$IMAGE_TAG --region $AWS_REGION 
   if [[ $? -eq 0 ]]; then
     return 0
   else
