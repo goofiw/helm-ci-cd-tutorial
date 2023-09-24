@@ -39,6 +39,7 @@ jobs:
             echo "Unknown check image script result"
             exit 2;
           fi
+          exit 3
       - name: Login to Amazon ECR
         if: ${{ steps.check-image-lock.outputs.BUILD_IMAGE == 'true' }}
         id: login-ecr
