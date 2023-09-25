@@ -23,12 +23,14 @@ runs:
   steps:
     - name: Env Deploy
       run: echo "Deploying to ${{ inputs.deploy-env }}"
+      shell: bash
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2 
       with:
         role-to-assume: arn:aws:iam::${{ inputs.aws-account-id }}:role/cicd-deploy-image
         aws-region: us-east-2
     - name: Install Dependencies
+      shell: bash
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh 
         chmod 700 get_helm.sh 
@@ -36,6 +38,7 @@ runs:
         curl -LO https://dl.k8s.io/release/v1.27.5/bin/linux/amd64/kubectl
     - name: Add Image Tag
       id: tag-image
+      shell: bash
       run: |
         MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.ecr-repository-name }} --image-ids imageTag=${{ github.sha }} --output text --query images[].imageManifest)
         echo "$MANIFEST"
@@ -44,6 +47,7 @@ runs:
         aws ecr put-image --repository-name ${{ inputs.ecr-repository-name }} --image-tag $IMAGE_TAG --image-manifest "$MANIFEST"
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
     - name: Deploy with Helm
+      shell: bash
       run: |
         aws eks --region us-east-2 update-kubeconfig --name education-eks-demo 
         echo ${{ steps.tag-image.outputs.IMAGE_TAG }}
