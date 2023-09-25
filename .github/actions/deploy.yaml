@@ -3,6 +3,18 @@ inputs:
   deploy-env:  # id of input
     description: 'test/stage/prod'
     required: true
+  aws-access-key-id:
+    description: 'aws access key'
+    required: true
+  aws-secret-access-key:
+    description: 'aws secret key'
+    required: true
+  aws-account-id:
+    description: 'aws ecr repo account id'
+    required: true
+  ecr-repository:
+    description: 'ECR repository'
+    required: true
 runs:
   using: "composite"
   env:
