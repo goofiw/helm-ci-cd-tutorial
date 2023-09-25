@@ -13,6 +13,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      ECR_REPOSITORY_NAME: 'cicd-demo'
     steps:
       - run: echo "Build triggered by a ${{ github.event_name }} event." 
       - name: Check out repository code
@@ -59,7 +60,7 @@ jobs:
       - name: Build Failure Step
         if: ${{ failure() }} 
         run: |
-          ./.github/scripts/handle-image-build-failure.sh ${{ github.sha }} cicd-tutorial ci-image-lock-demo us-east-2
+          ./.github/scripts/handle-image-build-failure.sh ${{ github.sha }} $ECR_REPOSITORY_NAME ci-image-lock-demo us-east-2
   deploy-stage:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest

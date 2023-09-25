@@ -5,7 +5,7 @@ BUCKET_NAME="ci-image-lock-demo"
 IMAGE_TAG=$1
 SLEEP_INTERVAL=10  # Interval in seconds to check the S3 file status
 TIMEOUT=180
-REPOSITORY_NAME=cicd-tutorial
+REPOSITORY_NAME=cicd-demo
 
 # Check if image tag is provided
 if [[ -z "$IMAGE_TAG" ]]; then
