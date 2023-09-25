@@ -20,7 +20,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2 
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/gh-actions-ecr
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/cicd-build-image
           aws-region: us-east-2
       - name: Check if image exists
         id: check-image-lock
@@ -59,7 +59,7 @@ jobs:
       - name: Build Failure Step
         if: ${{ failure() }} 
         run: |
-          ./.github/scripts/handle-build-image-failure.sh ${{ github.sha }} cicd-tutorial ci-image-lock-demo us-east-2
+          ./.github/scripts/handle-image-build-failure.sh ${{ github.sha }} cicd-tutorial ci-image-lock-demo us-east-2
   deploy-stage:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
@@ -91,7 +91,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2 
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/gh-actions-eks
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/cicd-deploy-image
           aws-region: us-east-2
       - name: Install Dependencies
         run: |
@@ -129,7 +129,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2 
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/gh-actions-eks
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/cicd-deploy-image
           aws-region: us-east-2
       - name: Install Dependencies
         run: |
