@@ -19,7 +19,7 @@ runs:
   using: "composite"
   env:
     AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-    AWS_SECRET_ACCESS_KEY: ${{ inputts.aws-secret-access-key }}
+    AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
   steps:
     - name: Env Deploy
       run: echo "Deploying to ${{ inputs.deploy-env }}"
