@@ -64,7 +64,7 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     steps:
       - name: Deploy to Stage
-        uses: .github/actions/deploy.yaml
+        uses: ./.github/actions/deploy.yaml
 
   deploy-test:
     if: ${{ github.event_name == 'workflow_dispatch' }}
