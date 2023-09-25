@@ -3,12 +3,12 @@ inputs:
   deploy-env:  # id of input
     description: 'test/stage/prod'
     required: true
-  aws-access-key-id:
-    description: 'aws access key'
-    required: true
-  aws-secret-access-key:
-    description: 'aws secret key'
-    required: true
+  # aws-access-key-id:
+  #   description: 'aws access key'
+  #   required: true
+  # aws-secret-access-key:
+  #   description: 'aws secret key'
+  #   required: true
   aws-account-id:
     description: 'aws ecr repo account id'
     required: true
@@ -20,9 +20,6 @@ inputs:
     required: true
 runs:
   using: "composite"
-  env:
-    AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-    AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
   steps:
     - name: Env Deploy
       run: echo "Deploying to ${{ inputs.deploy-env }}"

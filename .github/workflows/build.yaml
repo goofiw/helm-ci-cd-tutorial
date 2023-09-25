@@ -72,8 +72,8 @@ jobs:
         uses: ./.github/actions/deploy
         with:
           deploy-env: stage
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
           ecr-repository: ${{ secrets.ECR_REPOSITORY }}
           ecr-repository-name: cicd-demo
