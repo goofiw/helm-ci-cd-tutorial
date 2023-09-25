@@ -59,7 +59,7 @@ jobs:
       - name: Build Failure Step
         if: ${{ failure() }} 
         run: |
-          ./.github/scripts/handle-build-image-failure.sh ${{ github.sha }} cicd_tutorial ci-image-lock-demo us-east-2
+          ./.github/scripts/handle-build-image-failure.sh ${{ github.sha }} cicd-tutorial ci-image-lock-demo us-east-2
   deploy-stage:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
@@ -75,6 +75,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
           ecr-repository: ${{ secrets.ECR_REPOSITORY }}
+          ecr-repository-name: cicd-demo
 
   deploy-test:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -101,11 +102,11 @@ jobs:
       - name: Add Image Tag
         id: tag-image
         run: |
-          MANIFEST=$(aws ecr batch-get-image --repository-name cicd_tutorial --image-ids imageTag=${{ github.sha }} --output text --query images[].imageManifest)
+          MANIFEST=$(aws ecr batch-get-image --repository-name cicd-tutorial --image-ids imageTag=${{ github.sha }} --output text --query images[].imageManifest)
           echo "$MANIFEST"
           IMAGE_TAG=test-${GITHUB_SHA::7}-$(date +%s)
           echo "$IMAGE_TAG"
-          aws ecr put-image --repository-name cicd_tutorial --image-tag $IMAGE_TAG --image-manifest "$MANIFEST"
+          aws ecr put-image --repository-name cicd-tutorial --image-tag $IMAGE_TAG --image-manifest "$MANIFEST"
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
       - name: Deploy with Helm
         run: |
@@ -139,11 +140,11 @@ jobs:
       - name: Add Image Tag
         id: tag-image
         run: |
-          MANIFEST=$(aws ecr batch-get-image --repository-name cicd_tutorial --image-ids imageTag=${{ github.sha }} --output text --query images[].imageManifest)
+          MANIFEST=$(aws ecr batch-get-image --repository-name cicd-tutorial --image-ids imageTag=${{ github.sha }} --output text --query images[].imageManifest)
           echo "$MANIFEST"
           IMAGE_TAG=prod-${GITHUB_SHA::7}-$(date +%s)
           echo "$IMAGE_TAG"
-          aws ecr put-image --repository-name cicd_tutorial --image-tag $IMAGE_TAG --image-manifest "$MANIFEST"
+          aws ecr put-image --repository-name cicd-tutorial --image-tag $IMAGE_TAG --image-manifest "$MANIFEST"
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
       - name: Deploy with Helm
         run: |

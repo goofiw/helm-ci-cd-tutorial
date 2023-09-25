@@ -15,6 +15,9 @@ inputs:
   ecr-repository:
     description: 'ECR repository'
     required: true
+  ecr-repository-name:
+    description: 'ECR repository name'
+    required: true
 runs:
   using: "composite"
   env:
@@ -37,11 +40,11 @@ runs:
     - name: Add Image Tag
       id: tag-image
       run: |
-        MANIFEST=$(aws ecr batch-get-image --repository-name cicd_tutorial --image-ids imageTag=${{ github.sha }} --output text --query images[].imageManifest)
+        MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.ecr-repository-name }} --image-ids imageTag=${{ github.sha }} --output text --query images[].imageManifest)
         echo "$MANIFEST"
         IMAGE_TAG=${{ inputs.deploy-env }}-${GITHUB_SHA::7}-$(date +%s)
         echo "$IMAGE_TAG"
-        aws ecr put-image --repository-name cicd_tutorial --image-tag $IMAGE_TAG --image-manifest "$MANIFEST"
+        aws ecr put-image --repository-name ${{ inputs.ecr-repository-name }} --image-tag $IMAGE_TAG --image-manifest "$MANIFEST"
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
     - name: Deploy with Helm
       run: |
