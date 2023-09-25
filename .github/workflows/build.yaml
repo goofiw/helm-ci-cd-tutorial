@@ -68,7 +68,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Deploy to Stage
-        uses: ./.github/actions/deploy.yaml
+        uses: ./.github/actions/deploy
         with:
           deploy-env: stage
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
